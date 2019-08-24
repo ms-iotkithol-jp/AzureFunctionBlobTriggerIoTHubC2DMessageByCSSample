@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "CONNECTION_STORAGE": "<Azure Storage Connection String >",
+    "AZURE_IOT_HUB_CONNECTION_STRING_SERVICE":"< Azure IoT Hub Connection String for Service role >"
+  }
+}
