@@ -9,7 +9,7 @@ namespace embeddedgoerge
     public static class BlobToIoTHubC2DMessage
     {
         [FunctionName("BlobToIoTHubC2DMessage")]
-        public static async void Run([BlobTrigger("predicted/{name}", Connection = "CONNECTION_STORAGE")]Stream myBlob, string name, ILogger log)
+        public static async void Run([BlobTrigger("c2d-messages/{name}", Connection = "CONNECTION_STORAGE")]Stream myBlob, string name, ILogger log)
         {
             log.LogInformation($"C# Blob trigger function Processed blob\n Name:{name} \n Size: {myBlob.Length} Bytes");
             var iothubConnectionString = System.Environment.GetEnvironmentVariable("AZURE_IOT_HUB_CONNECTION_STRING_SERVICE",EnvironmentVariableTarget.Process);
