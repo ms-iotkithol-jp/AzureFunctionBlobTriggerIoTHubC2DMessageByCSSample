@@ -26,9 +26,18 @@ namespace embeddedgoerge
                     var serviceClient =  Microsoft.Azure.Devices.ServiceClient.CreateFromConnectionString(iothubConnectionString);
                     await serviceClient.OpenAsync();
 
-                    var c2dMessage = new Microsoft.Azure.Devices.Message(myBlob);
-                    log.LogInformation($"Send received via blob to {targetDevice}");
-                    await serviceClient.SendAsync(targetDevice,c2dMessage);
+                    var methodInvocation = new Microsoft.Azure.Devices.CloudToDeviceMethod("SoundAlarm");
+                    var reader = new System.IO.StreamReader(myBlob);
+                    var jsonMessage = reader.ReadToEnd();
+                    methodInvocation.SetPayloadJson(jsonMessage);
+//                    var c2dMessage = new Microsoft.Azure.Devices.Message(myBlob);
+//                    log.LogInformation($"Send received via blob to {targetDevice}");
+                    log.LogInformation($"Invoke method via blob to {targetDevice}");
+                    var invocationResult = await serviceClient.InvokeDeviceMethodAsync(targetDevice, methodInvocation);
+                    var invokedStatus = invocationResult.Status;
+                    var invokedPayload = invocationResult.GetPayloadAsJson();
+                    log.LogInformation($"Invocation Result - {invokedStatus}:{invokedPayload}");
+//                    await serviceClient.SendAsync(targetDevice,c2dMessage);
                     await serviceClient.CloseAsync();
                 }
             }
