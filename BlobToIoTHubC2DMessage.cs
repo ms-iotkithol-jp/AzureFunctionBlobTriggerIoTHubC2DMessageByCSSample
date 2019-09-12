@@ -26,7 +26,7 @@ namespace embeddedgoerge
                     var serviceClient =  Microsoft.Azure.Devices.ServiceClient.CreateFromConnectionString(iothubConnectionString);
                     await serviceClient.OpenAsync();
 
-                    var methodInvocation = new Microsoft.Azure.Devices.CloudToDeviceMethod("SoundAlarm");
+                    var methodInvocation = new Microsoft.Azure.Devices.CloudToDeviceMethod("sensehat-display.ShowText");
                     var reader = new System.IO.StreamReader(myBlob);
                     var jsonMessage = reader.ReadToEnd();
                     methodInvocation.SetPayloadJson(jsonMessage);
