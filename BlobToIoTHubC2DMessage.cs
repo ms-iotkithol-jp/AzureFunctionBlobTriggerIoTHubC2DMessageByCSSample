@@ -1,8 +1,13 @@
+// Please edit comment for use C2D message or Device Metho invocation
+// #define USE_C2D_MESSAGE
+#define USE_DEVICE_METHOD
+
 using System;
 using System.IO;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+
 
 namespace embeddedgoerge
 {
@@ -30,14 +35,18 @@ namespace embeddedgoerge
                     var reader = new System.IO.StreamReader(myBlob);
                     var jsonMessage = reader.ReadToEnd();
                     methodInvocation.SetPayloadJson(jsonMessage);
-//                    var c2dMessage = new Microsoft.Azure.Devices.Message(myBlob);
-//                    log.LogInformation($"Send received via blob to {targetDevice}");
+#if (USE_C2D_MESSAGE)
+                    var c2dMessage = new Microsoft.Azure.Devices.Message(myBlob);
+                    log.LogInformation($"Send received via blob to {targetDevice}");
+                    await serviceClient.SendAsync(targetDevice,c2dMessage);
+#endif
+#if (USE_DEVICE_METHOD)
                     log.LogInformation($"Invoke method via blob to {targetDevice}");
                     var invocationResult = await serviceClient.InvokeDeviceMethodAsync(targetDevice, methodInvocation);
                     var invokedStatus = invocationResult.Status;
                     var invokedPayload = invocationResult.GetPayloadAsJson();
                     log.LogInformation($"Invocation Result - {invokedStatus}:{invokedPayload}");
-//                    await serviceClient.SendAsync(targetDevice,c2dMessage);
+#endif
                     await serviceClient.CloseAsync();
                 }
             }
